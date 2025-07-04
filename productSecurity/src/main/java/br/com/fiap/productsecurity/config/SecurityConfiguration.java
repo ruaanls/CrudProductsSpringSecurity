@@ -1,5 +1,6 @@
 package br.com.fiap.productsecurity.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,22 +12,24 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration // Definição de classe de configuração
 @EnableWebSecurity // Habilitar as configurações personalizadas do spring security
 public class SecurityConfiguration {
 
+    @Autowired
+    SecurityFilter securityFilter;
     @Bean
     // Configurações do filtro de segurança PADRÃO do spring security
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception
-
     {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 // Gestão de dados da sessão definido para stateless
                 // Stateless = Não guardar os dados de autenticação/IP e afins do usuário na sessão ou servidor (Melhor prática)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //Configuração de permissões específicas das apis
+                // Filtro PADRÃO do Spring security
                 .authorizeHttpRequests(authorize -> authorize
                         // api de login e registro todos podem acessar
                         .requestMatchers(HttpMethod.POST,"auth/login").permitAll()
@@ -38,6 +41,9 @@ public class SecurityConfiguration {
                         // Qualquer outra api apenas autenticados podem acessar
                         .anyRequest().authenticated()
                 )
+                // Adicione um filtro PERSONALIZADO ANTES DO FILTRO PADRÃO
+                // UsernamePasswordAuthenticationFilter.class = Filtro padrão que está acima
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
