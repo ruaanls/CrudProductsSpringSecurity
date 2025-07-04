@@ -18,9 +18,9 @@ public class AuthorizationService implements UserDetailsService
     @Autowired
     private UserRepository userRepository;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         // Aqui entendemos o por que aquele findByUsername tem que devolver UserDetails ao invés de User
         // Por que esse método espera que seja retornado um objeto do tipo UserDetails
-        return userRepository.findByUsername(username);
+        return userRepository.findByLogin(login);
     }
 }

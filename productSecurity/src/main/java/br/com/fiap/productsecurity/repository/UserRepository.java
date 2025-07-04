@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, String> {
     // O método de FIND usuários é usado por um outro método do spring security no authorization Service
     // Esse método obriga e espera receber um usuário do tipo USER DETAILS
-    UserDetails findByUsername(String username);
+    UserDetails findByLogin(String login);
 }

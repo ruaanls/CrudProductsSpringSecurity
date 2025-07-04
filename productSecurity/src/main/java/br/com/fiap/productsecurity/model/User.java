@@ -15,14 +15,25 @@ public class User implements UserDetails // Implementação OBRIGATÓRIA para a 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID) // Utilizamos UUID para maior segurança, mas não tem problema fazer com long
     private String id;
-    private String username;
+    private String login;
     private String password;
-    private UserRole role;
+    private UserRole user_role;
+
+    public User(String login, String senhaCriptografada, UserRole userRole)
+    {
+        this.login = login;
+        this.password = senhaCriptografada;
+        this.user_role = userRole;
+    }
+
+    public User() {
+
+    }
 
     @Override
     // Sempre quando o usuário for se logar, esse método vai verificar quais são as ROLES dele (Admin ou User)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role.equals(UserRole.ADMIN))
+        if(this.user_role.equals(UserRole.ADMIN))
         {
             // Se a role do usuário for ADMIN o método irá retornar uma lista com as duas authorities especiais do spring
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
@@ -41,15 +52,19 @@ public class User implements UserDetails // Implementação OBRIGATÓRIA para a 
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.login;
+    }
+
+    public String getLogin() {
+        return this.login;
     }
 
     public String getId() {
         return id;
     }
 
-    public UserRole getRole() {
-        return role;
+    public UserRole getUser_role() {
+        return user_role;
     }
 
     @Override
