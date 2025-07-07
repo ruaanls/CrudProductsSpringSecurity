@@ -5,6 +5,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class TokenService
         }
         catch (JWTCreationException e)
         {
-            throw new JWTCreationException("Erro ao gerar token: ", e.getCause());
+            throw new RuntimeException("Erro ao gerar token: ", e.getCause());
         }
 
     }
@@ -40,22 +41,25 @@ public class TokenService
         try
         {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            JWT.require(algorithm)
+            return JWT.require(algorithm)
                     .withIssuer("apisecurity")
                     .build()
                     .verify(token)
                     .getSubject();
-            return token;
+
         }
-        catch (JWTVerificationException e)
+        catch (TokenExpiredException e)
         {
-            throw new JWTVerificationException("Erro ao validar token:", e.getCause());
+            throw new TokenExpiredException("Token JWT Expirado por favor, realize um login novamente", e.getExpiredOn());
+        } catch (JWTVerificationException e) {
+            throw new JWTVerificationException("Token JWT inválido por favor, realize um login novamente ", e.getCause());
         }
     }
 
 
     private Instant genExpirationDate()
     {
-        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of( "+03:00"));
+        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
+
     }
 }

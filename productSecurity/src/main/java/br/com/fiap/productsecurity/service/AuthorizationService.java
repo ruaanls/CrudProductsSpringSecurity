@@ -22,6 +22,12 @@ public class AuthorizationService implements UserDetailsService
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         // Aqui entendemos o por que aquele findByUsername tem que devolver UserDetails ao invés de User
         // Por que esse método espera que seja retornado um objeto do tipo UserDetails
-        return userRepository.findByLogin(login);
+        UserDetails user = userRepository.findByLogin(login);
+
+        if(user == null)
+        {
+            throw new UsernameNotFoundException("Usuário não encontrado: " + login);
+        }
+        return user;
     }
 }

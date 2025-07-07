@@ -20,6 +20,9 @@ public class SecurityConfiguration {
 
     @Autowired
     SecurityFilter securityFilter;
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     @Bean
     // Configurações do filtro de segurança PADRÃO do spring security
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception
@@ -41,6 +44,8 @@ public class SecurityConfiguration {
                         // Qualquer outra api apenas autenticados podem acessar
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
+
                 // Adicione um filtro PERSONALIZADO ANTES DO FILTRO PADRÃO
                 // UsernamePasswordAuthenticationFilter.class = Filtro padrão que está acima
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -56,7 +61,8 @@ public class SecurityConfiguration {
 
     // método para criptografar e descriptografar senhas
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder()
+    {
         return new BCryptPasswordEncoder();
     }
 
