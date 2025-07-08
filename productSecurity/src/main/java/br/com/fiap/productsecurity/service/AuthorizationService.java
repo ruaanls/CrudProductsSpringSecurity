@@ -2,6 +2,7 @@ package br.com.fiap.productsecurity.service;
 
 import br.com.fiap.productsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +27,7 @@ public class AuthorizationService implements UserDetailsService
 
         if(user == null)
         {
-            throw new UsernameNotFoundException("Usuário não encontrado: " + login);
+            throw new InternalAuthenticationServiceException("Usuário não encontrado: " + login);
         }
         return user;
     }

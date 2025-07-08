@@ -7,6 +7,9 @@ public class OracleInputException extends RuntimeException {
         super(message);
     }
 
+    public OracleInputException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 
     public OracleInputException() {

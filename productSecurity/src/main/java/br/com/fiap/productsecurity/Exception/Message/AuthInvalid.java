@@ -2,13 +2,13 @@ package br.com.fiap.productsecurity.Exception.Message;
 
 import org.springframework.http.HttpStatus;
 
-public class LoginInvalid
+public class AuthInvalid
 {
     private HttpStatus status;
     private String message;
 
 
-    public LoginInvalid(HttpStatus status, String message) {
+    public AuthInvalid(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
     }

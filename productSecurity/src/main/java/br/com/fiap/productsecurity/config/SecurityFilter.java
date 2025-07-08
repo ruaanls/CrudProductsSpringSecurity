@@ -55,6 +55,7 @@ public class SecurityFilter extends OncePerRequestFilter
                request.setAttribute("exception", e);
            } catch (JWTVerificationException e) {
                // Token inválido - será capturado pelo AuthenticationEntryPoint
+               System.out.println("JWTVerificationException capturada: " + e.getMessage());
                request.setAttribute("exception", e);
            } catch (Exception e) {
                // Outros erros de token
