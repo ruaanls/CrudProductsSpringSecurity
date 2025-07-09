@@ -28,25 +28,37 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         if (storedJwtException instanceof TokenExpiredException ) {
             // Token JWT expirado
             error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Token JWT expirado, por favor realize o login novamente!");
+            writeErrorResponse(response, error);
 
         } else if (storedJwtException instanceof JWTVerificationException) {
             // Token JWT inválido
             error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Token JWT inválido, por favor realize o login novamente!");
+            writeErrorResponse(response, error);
 
         } else if (authException instanceof BadCredentialsException) {
             // Login e senha incorretos
             error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Login ou senha Incorretos, por favor tente novamente");
+            writeErrorResponse(response, error);
 
-        }
-        else if (authException instanceof InternalAuthenticationServiceException) {
+        } else if (authException instanceof InternalAuthenticationServiceException) {
             error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Usuário não existe no banco de dados, por favor realize o cadastro primeiro!");
-        }
+            writeErrorResponse(response, error);
+        } else {
+            // Verifica se é um caso de token JWT ausente
+            String authHeader = request.getHeader("Authorization");
+            String requestURI = request.getRequestURI();
 
-        else {
-            // Outras exceções de autenticação
-            error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Erro de autenticação: " + authException.getMessage());
+            // Só trata como token ausente se for uma requisição para endpoint protegido
+            // e não tiver o header Authorization
+            if (isProtectedEndpoint(requestURI) && (authHeader == null || !authHeader.startsWith("Bearer "))) {
+                error = new AuthInvalid(HttpStatus.UNAUTHORIZED, "Token JWT não fornecido. Por favor, inclua o token no header Authorization!");
+                writeErrorResponse(response, error);
+            }
+            // Para outros casos, não faz nada - deixa o Spring Security tratar
         }
+    }
 
+    private void writeErrorResponse(HttpServletResponse response, AuthInvalid error) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -55,5 +67,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.getWriter().write(jsonResponse);
     }
 
+    private boolean isProtectedEndpoint(String requestURI) {
+        // Define quais endpoints são protegidos e precisam de JWT
+        return !requestURI.startsWith("/product/create") &&
+                !requestURI.startsWith("/product/*");
 
+    }
 }

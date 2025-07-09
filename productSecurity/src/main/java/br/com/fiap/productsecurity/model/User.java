@@ -17,6 +17,9 @@ public class User implements UserDetails // Implementação OBRIGATÓRIA para a 
     private String id;
     private String login;
     private String password;
+    // Salvar no banco de dados a STRING do ENUM
+    // Se não adicionar essa annotation o JPA adiciona números no lugar das strings do ENUM por padrão ex: Admin = 1, User = 2
+    @Enumerated(EnumType.STRING)
     private UserRole user_role;
 
     public User(String login, String senhaCriptografada, UserRole userRole)

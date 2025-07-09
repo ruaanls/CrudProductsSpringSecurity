@@ -23,6 +23,10 @@ public class SecurityConfiguration {
     @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
+
     @Bean
     // Configurações do filtro de segurança PADRÃO do spring security
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception
@@ -38,13 +42,18 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "auth/register").permitAll()
                         // Api de cadastro, deletar e atualizar somente administradores podem acessar
-                        .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "api/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "api/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/product/create").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/product/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/product/*").hasRole("ADMIN")
                         // Qualquer outra api apenas autenticados podem acessar
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+
+
+                )
 
                 // Adicione um filtro PERSONALIZADO ANTES DO FILTRO PADRÃO
                 // UsernamePasswordAuthenticationFilter.class = Filtro padrão que está acima
