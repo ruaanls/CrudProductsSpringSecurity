@@ -2,7 +2,7 @@ package br.com.fiap.productsecurity.model;
 
 import jakarta.persistence.*;
 
-@Table(name = "product")
+@Table(name = "product2")
 @Entity
 public class Product
 {
