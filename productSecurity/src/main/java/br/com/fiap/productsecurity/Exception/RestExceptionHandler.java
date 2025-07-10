@@ -33,8 +33,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(OracleInputException.class)
     private ResponseEntity<OracleInput> oracleInputHandler(OracleInputException exception)
     {
-        OracleInput Exception = new OracleInput(HttpStatus.BAD_REQUEST,exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Exception);
+        OracleInput Exception = new OracleInput(HttpStatus.INTERNAL_SERVER_ERROR,exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Exception);
     }
 
     @Override

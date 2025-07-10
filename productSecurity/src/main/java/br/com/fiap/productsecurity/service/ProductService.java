@@ -26,8 +26,8 @@ public class ProductService
         try {
             Product savedProduct = productsRepository.save(product);
             return productMapper.productToResponse(savedProduct);
-        } catch (DataIntegrityViolationException e) {
-            throw new OracleInputException("Erro ao salvar produto: " + e.getMostSpecificCause().getMessage());
+        } catch (Exception e) {
+            throw new OracleInputException("Erro ao salvar produto por favor tente novamente "  );
         }
     }
 
@@ -37,7 +37,7 @@ public class ProductService
             return productsRepository.findById(id)
                 .orElseThrow(() -> new OracleInputException("Produto não encontrado com ID: " + id));
         } catch (Exception e) {
-            throw new OracleInputException("Erro ao buscar produto: " + e.getMessage());
+            throw new OracleInputException("Erro ao buscar produto por favor tente novamente ");
         }
     }
 
@@ -61,19 +61,10 @@ public class ProductService
             
             Product savedProduct = productsRepository.save(product);
             return productMapper.productToResponse(savedProduct);
-        } catch (DataIntegrityViolationException e) {
-            throw new OracleInputException("Erro ao atualizar produto: " + e.getMostSpecificCause().getMessage());
         } catch (Exception e) {
-            throw new OracleInputException("Erro ao atualizar produto: " + e.getMessage());
+            throw new OracleInputException("Erro ao atualizar produto por favor tente novamente" );
         }
     }
 
-    public List<Product> listAllProducts()
-    {
-        try {
-            return productsRepository.findAll();
-        } catch (Exception e) {
-            throw new OracleInputException("Erro ao listar produtos: " + e.getMessage());
-        }
-    }
+
 }
