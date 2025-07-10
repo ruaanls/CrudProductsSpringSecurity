@@ -45,8 +45,9 @@ Rode o arquivo ProductSecurityApplication ou faça esse comando
 ```bash
 ./gradlew bootRun
 ```
-
-A aplicação estará disponível em `http://localhost:8080`
+Link do vídeo de demonstração da aplicação funcionando em  
+A aplicação estará disponível pelo IP de sua máquina utilizando o conteiner docker através do dockerfile.   
+ou localmente em `http://localhost:8080`
 
 ## 🔐 Endpoints da API
 

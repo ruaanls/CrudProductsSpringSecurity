@@ -11,7 +11,6 @@ public class OracleInputException extends RuntimeException {
         super(message, cause);
     }
 
-
     public OracleInputException() {
         super("Erro ao inserir dados no banco de dados, favor tente novamente mais tarde");
     }
