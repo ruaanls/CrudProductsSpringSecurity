@@ -48,13 +48,13 @@ public class SecurityConfiguration {
                         // Qualquer outra api apenas autenticados podem acessar
                         .anyRequest().authenticated()
                 )
+                // Ativando as chamadas de exceções personalizadas
                 .exceptionHandling(ex -> ex
+                        // Exceções de login e registro
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        // Exceções de acesso negado
                         .accessDeniedHandler(customAccessDeniedHandler)
-
-
                 )
-
                 // Adicione um filtro PERSONALIZADO ANTES DO FILTRO PADRÃO
                 // UsernamePasswordAuthenticationFilter.class = Filtro padrão que está acima
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

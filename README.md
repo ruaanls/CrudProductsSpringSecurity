@@ -4,7 +4,7 @@ API REST desenvolvida com Spring Boot e Spring Security para gerenciamento de pr
 
 ## 🛠 Tecnologias Utilizadas
 
-- Java 17
+- Java 21
 - Spring Boot 3.x
 - Spring Security
 - JWT (JSON Web Token)
@@ -13,7 +13,7 @@ API REST desenvolvida com Spring Boot e Spring Security para gerenciamento de pr
 
 ## 📋 Pré-requisitos
 
-- Java 17 ou superior
+- Java 21 
 - Oracle Database
 - Gradle
 - Git
@@ -23,7 +23,7 @@ API REST desenvolvida com Spring Boot e Spring Security para gerenciamento de pr
 ### Clonando o repositório
 
 ```bash
-git clone <url-do-seu-repositorio>
+git clone https://github.com/ruaanls/CrudProductsSpringSecurity.git
 cd productSecurity
 ```
 
